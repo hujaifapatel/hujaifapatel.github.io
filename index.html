@@ -469,6 +469,14 @@
       transition: all .2s;
     }
 
+    .skill-pill img {
+      width: 34px;
+      height: 34px;
+      display: block;
+      margin: 0 auto 12px;
+      object-fit: contain;
+    }
+
     .skill-pill:hover {
       transform: translateY(-4px);
       box-shadow: 0 14px 30px -14px rgba(15, 60, 50, 0.2);
@@ -806,6 +814,167 @@
         animation: none !important;
       }
     }
+
+    /* ===== Mobile redesign ===== */
+    @media (max-width: 640px) {
+      .wrap {
+        padding: 0 18px;
+      }
+
+      section {
+        padding: 56px 0;
+      }
+
+      .sec-title {
+        margin-bottom: 34px;
+      }
+
+      /* nav */
+      .nav-inner {
+        padding: 14px 18px;
+        gap: 10px;
+      }
+
+      .brand {
+        font-size: 0.98rem;
+      }
+
+      .hire-btn {
+        padding: 9px 14px;
+        font-size: 12.5px;
+        gap: 6px;
+      }
+
+      .hire-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      /* hero */
+      .hero {
+        padding: 40px 0 56px;
+      }
+
+      .dot-decor {
+        display: none;
+      }
+
+      .hero-heading-row {
+        gap: 14px;
+        margin-bottom: 10px;
+      }
+
+      .hero-photo {
+        width: 72px;
+        height: 72px;
+        min-width: 72px;
+        border-radius: 20px;
+        padding: 3px;
+      }
+
+      .hero-photo img {
+        border-radius: 17px;
+      }
+
+      .hero-photo::after {
+        width: 15px;
+        height: 15px;
+        top: -5px;
+        right: -5px;
+        border-width: 2px;
+      }
+
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+
+      .hero h2 {
+        font-size: 1.15rem;
+        margin-bottom: 14px;
+      }
+
+      .hero p.lede {
+        font-size: 14.5px;
+        margin-bottom: 22px;
+      }
+
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .social-row {
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+
+      .btn {
+        font-size: 13.5px;
+        padding: 11px 20px;
+      }
+
+      .hero-illus svg {
+        max-width: 220px !important;
+      }
+
+      /* skills */
+      .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .skill-pill {
+        padding: 16px 6px;
+        font-size: 12px;
+      }
+
+      .skill-pill img {
+        width: 28px;
+        height: 28px;
+        margin-bottom: 8px;
+      }
+
+      /* projects */
+      .proj-icon-badge {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 10px;
+      }
+
+      .proj-icon-badge svg {
+        width: 21px;
+        height: 21px;
+      }
+
+      .proj-top {
+        padding: 20px 20px 0;
+      }
+
+      .proj-body {
+        padding: 16px 20px 20px;
+      }
+
+      /* contact */
+      .contact-info {
+        padding: 26px;
+      }
+
+      .icon-btn-white {
+        width: 36px;
+        height: 36px;
+      }
+
+      .icon-btn-white svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
   </style>
 </head>
 
@@ -883,7 +1052,6 @@
         </div>
 
         <div class="cta-row">
-         
           <a class="btn maroon-btn" href="Patel_Hujaifa_Resume.pdf" id="resume-btn" download="Patel_Hujaifa_Resume.pdf">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -1205,7 +1373,7 @@
 
   <script>
     // Resume download -> verify the file actually exists before navigating, and give a clear
-    // message instead of silently failing if it hasn't been uploaded to the repo yet.
+    // message instead of landing on a raw 404 page if it hasn't been uploaded to the repo yet.
     (function () {
       var resumeBtn = document.getElementById('resume-btn');
       if (!resumeBtn) return;
@@ -1214,7 +1382,7 @@
         e.preventDefault();
         var url = resumeBtn.getAttribute('href');
 
-        fetch(url, { method: 'HEAD' }).then(function (res) {
+        fetch(url, { method: 'HEAD', cache: 'no-store' }).then(function (res) {
           if (res.ok) {
             var a = document.createElement('a');
             a.href = url;
@@ -1223,12 +1391,10 @@
             a.click();
             document.body.removeChild(a);
           } else {
-            alert('Resume file not found. Make sure "' + url + '" is uploaded to the same folder as this page.');
+            alert('Resume file not found (' + res.status + '). "' + url + '" needs to be uploaded to the same folder as index.html in your GitHub repo, with that exact filename.');
           }
         }).catch(function () {
-          // Some static hosts block HEAD requests or this is being opened from a local file:// path.
-          // Fall back to a normal navigation rather than blocking the download entirely.
-          window.location.href = url;
+          alert('Could not check for the resume file. Make sure "' + url + '" is uploaded to the same folder as index.html in your GitHub repo.');
         });
       });
     })();
@@ -1302,7 +1468,6 @@
           '<h3>' + p.title + '</h3>' +
           '<div class="tech-row">' + techHTML + '</div>' +
           '<p>' + p.desc + '</p>' +
-          '<div class="proj-links"><a href="https://github.com/hujaifapatel" target="_blank" rel="noopener">Source Code ' + arrowSVG + '</a></div>' +
           '</div>';
         grid.appendChild(card);
       });
